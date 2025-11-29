@@ -1,0 +1,65 @@
+{
+    "3DBall": {
+        "checkpoints": [
+            {
+                "steps": 349043,
+                "file_path": "results\\baseline-test\\3DBall\\3DBall-349043.onnx",
+                "reward": 100.00001525878906,
+                "creation_time": 1764003122.5742452,
+                "auxillary_file_paths": [
+                    "results\\baseline-test\\3DBall\\3DBall-349043.pt"
+                ]
+            },
+            {
+                "steps": 399043,
+                "file_path": "results\\baseline-test\\3DBall\\3DBall-399043.onnx",
+                "reward": 100.00001525878906,
+                "creation_time": 1764003171.8908706,
+                "auxillary_file_paths": [
+                    "results\\baseline-test\\3DBall\\3DBall-399043.pt"
+                ]
+            },
+            {
+                "steps": 449720,
+                "file_path": "results\\baseline-test\\3DBall\\3DBall-449720.onnx",
+                "reward": 100.00001525878906,
+                "creation_time": 1764003221.4282362,
+                "auxillary_file_paths": [
+                    "results\\baseline-test\\3DBall\\3DBall-449720.pt"
+                ]
+            },
+            {
+                "steps": 499720,
+                "file_path": "results\\baseline-test\\3DBall\\3DBall-499720.onnx",
+                "reward": 100.00001525878906,
+                "creation_time": 1764003269.5784829,
+                "auxillary_file_paths": [
+                    "results\\baseline-test\\3DBall\\3DBall-499720.pt"
+                ]
+            },
+            {
+                "steps": 500720,
+                "file_path": "results\\baseline-test\\3DBall\\3DBall-500720.onnx",
+                "reward": 100.00001525878906,
+                "creation_time": 1764003269.6504982,
+                "auxillary_file_paths": [
+                    "results\\baseline-test\\3DBall\\3DBall-500720.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 500720,
+            "file_path": "results\\baseline-test\\3DBall.onnx",
+            "reward": 100.00001525878906,
+            "creation_time": 1764003269.6504982,
+            "auxillary_file_paths": [
+                "results\\baseline-test\\3DBall\\3DBall-500720.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.0.0",
+        "torch_version": "1.13.1+cu117"
+    }
+}

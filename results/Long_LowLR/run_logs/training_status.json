@@ -1,0 +1,65 @@
+{
+    "3DBall": {
+        "checkpoints": [
+            {
+                "steps": 1849949,
+                "file_path": "results\\Long_LowLR\\3DBall\\3DBall-1849949.onnx",
+                "reward": 1.9739836625613494,
+                "creation_time": 1764445102.3834152,
+                "auxillary_file_paths": [
+                    "results\\Long_LowLR\\3DBall\\3DBall-1849949.pt"
+                ]
+            },
+            {
+                "steps": 1899995,
+                "file_path": "results\\Long_LowLR\\3DBall\\3DBall-1899995.onnx",
+                "reward": 1.997618902297247,
+                "creation_time": 1764445152.1155303,
+                "auxillary_file_paths": [
+                    "results\\Long_LowLR\\3DBall\\3DBall-1899995.pt"
+                ]
+            },
+            {
+                "steps": 1949956,
+                "file_path": "results\\Long_LowLR\\3DBall\\3DBall-1949956.onnx",
+                "reward": 1.987254798412323,
+                "creation_time": 1764445200.2469366,
+                "auxillary_file_paths": [
+                    "results\\Long_LowLR\\3DBall\\3DBall-1949956.pt"
+                ]
+            },
+            {
+                "steps": 1999999,
+                "file_path": "results\\Long_LowLR\\3DBall\\3DBall-1999999.onnx",
+                "reward": 2.1506328469590295,
+                "creation_time": 1764445248.4369617,
+                "auxillary_file_paths": [
+                    "results\\Long_LowLR\\3DBall\\3DBall-1999999.pt"
+                ]
+            },
+            {
+                "steps": 2000018,
+                "file_path": "results\\Long_LowLR\\3DBall\\3DBall-2000018.onnx",
+                "reward": 2.1421383012015864,
+                "creation_time": 1764445248.4779875,
+                "auxillary_file_paths": [
+                    "results\\Long_LowLR\\3DBall\\3DBall-2000018.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 2000018,
+            "file_path": "results\\Long_LowLR\\3DBall.onnx",
+            "reward": 2.1421383012015864,
+            "creation_time": 1764445248.4779875,
+            "auxillary_file_paths": [
+                "results\\Long_LowLR\\3DBall\\3DBall-2000018.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.0.0",
+        "torch_version": "1.13.1+cu117"
+    }
+}
