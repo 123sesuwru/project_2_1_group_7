@@ -1,32 +1,41 @@
 import pandas as pd
 import os
+import glob
 
-# --- UPDATED PATHS (Pointing to the Data folder) ---
-FILE_IVAN = os.path.join('Data', 'ivan_adjusted_data.csv')
-FILE_MAX = os.path.join('Data', 'max.csv')
 
-# --- FEATURES (Inputs for Random Forest) ---
+DATA_DIR = 'Data' 
+OUTPUT_DIR = '.'   
+
+
+COLUMN_MAP = {
+    'lambd': 'lambda',
+    '3DBall.Environment.CumulativeReward.mean': 'CumulativeReward',
+    'Time Elapsed/s': 'TimeElapsed'
+}
+
 FEATURES = [
     'batch_size',
     'buffer_size',
     'learning_rate',
     'beta',
     'epsilon',
-    'lambd',
+    'lambda',
     'num_epoch',
     'hidden_units',
     'num_layers',
     'time_horizon',
-    'max_steps'
+    'max_steps',
+    'gamma',
+    'normalize',
+    # Hardware (Optional - Tree models can use these)
+    'CPU Cores',
+    'Total RAM'
 ]
 
-# --- TARGETS (Outputs to Predict) ---
-TARGETS = [
-    'Time Elapsed/s',
-    '3DBall.Environment.CumulativeReward.mean'
-]
+# TARGETS (The Outputs)
+TARGETS = ['TimeElapsed', 'CumulativeReward']
 
-# --- DEFAULTS (To fill missing values) ---
+
 DEFAULTS = {
     'hidden_units': 128,
     'num_layers': 2,
@@ -38,52 +47,76 @@ DEFAULTS = {
     'learning_rate': 3e-4,
     'beta': 0.001,
     'epsilon': 0.2,
-    'lambd': 0.99,
-    'num_epoch': 3
+    'lambda': 0.99,
+    'num_epoch': 3,
+    'normalize': True,   
+    'CPU Cores': 8,     
+    'Total RAM': 16       # Median guess (GB)
 }
 
-def generate_files():
-    # 1. Load Data
-    print(f"Looking for files in: {os.getcwd()}/Data/")
+def clean_ram(val):
+    """Converts '15.14 GB' string to float 15.14"""
+    if pd.isna(val): return val
+    if isinstance(val, (int, float)): return val
+    return float(str(val).replace(' GB', '').replace(' MB', '')) / (1000 if 'MB' in str(val) else 1)
+
+def merge_and_prepare():
+    print(" Starting Data Pipeline...")
     
-    try:
-        df_ivan = pd.read_csv(FILE_IVAN)
-        print(f"Loaded Ivan's data: {len(df_ivan)} rows")
-    except FileNotFoundError:
-        print(f" ERROR: Could not find {FILE_IVAN}")
+   
+    files = glob.glob(os.path.join(DATA_DIR, "*.csv"))
+    print(f"Found {len(files)} files: {[os.path.basename(f) for f in files]}")
+    
+    dfs = []
+    for f in files:
+        try:
+            df = pd.read_csv(f)
+            df = df.rename(columns=COLUMN_MAP)
+            dfs.append(df)
+            print(f"  -> Loaded {os.path.basename(f)} ({len(df)} rows)")
+        except Exception as e:
+            print(f"   Error reading {f}: {e}")
+
+    if not dfs:
+        print(" No data found!")
         return
 
-    try:
-        df_max = pd.read_csv(FILE_MAX)
-        print(f"Loaded Max's data: {len(df_max)} rows")
-    except FileNotFoundError:
-        print(f" Warning: Could not find {FILE_MAX} (Processing only Ivan's data)")
-        df_max = pd.DataFrame()
+    full_df = pd.concat(dfs, ignore_index=True)
+    print(f"\nTotal Raw Rows: {len(full_df)}")
 
-    # 2. Merge
-    full_df = pd.concat([df_ivan, df_max], ignore_index=True)
     
-    # 3. Clean & Fill
+    
+    if 'Total RAM' in full_df.columns:
+        full_df['Total RAM'] = full_df['Total RAM'].apply(clean_ram)
+
+    
     for col in FEATURES:
-        # Create column if missing
         if col not in full_df.columns:
+            print(f"   Warning: Column '{col}' missing from all files. Filling with default.")
             full_df[col] = DEFAULTS.get(col, 0)
-        # Fill NaNs
+        
+        
         full_df[col] = full_df[col].fillna(DEFAULTS.get(col, 0))
-    
-    # Drop rows where Targets are missing
-    full_df.dropna(subset=TARGETS, inplace=True)
 
-    # 4. Save Outputs (Saving these to Root is fine)
+
+    full_df.dropna(subset=TARGETS, inplace=True)
+    
+    
     X = full_df[FEATURES]
     y = full_df[TARGETS]
 
-    X.to_csv('X_features.csv', index=False)
-    y.to_csv('y_targets.csv', index=False)
     
-    print("\n SUCCESS! Files Generated in root folder:")
-    print(f"  -> X_features.csv ({len(X)} rows)")
-    print(f"  -> y_targets.csv  ({len(y)} rows)")
+    X.to_csv(os.path.join(OUTPUT_DIR, 'X_features.csv'), index=False)
+    y.to_csv(os.path.join(OUTPUT_DIR, 'y_targets.csv'), index=False)
+    
+
+    combined = pd.concat([X, y], axis=1)
+    combined.to_csv(os.path.join(OUTPUT_DIR, 'final_combined_data.csv'), index=False)
+
+    print("\n SUCCESS! Data is ready for RF, XGBoost, and NN.")
+    print(f"  -> X_features.csv: {X.shape}")
+    print(f"  -> y_targets.csv:  {y.shape}")
+    print("  -> final_combined_data.csv (Master)")
 
 if __name__ == "__main__":
-    generate_files()
+    merge_and_prepare()
